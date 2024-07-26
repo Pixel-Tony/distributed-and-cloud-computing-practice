@@ -10,6 +10,8 @@
     "C_Cpp.formatting": "vcFormat",
     "files.associations": {
         "*.h": "c",
+        "*.nml": "nml",
+        "*.css": "tailwindcss",
         "iostream": "cpp",
         "ostream": "cpp",
         "istream": "cpp",
@@ -98,7 +100,10 @@
         "*.rh": "cpp",
         "ranges": "cpp",
         "span": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "regex": "cpp",
+        "variant": "cpp"
     },
-    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.codeAnalysis.clangTidy.enabled": true
 }

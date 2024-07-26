@@ -1,17 +1,20 @@
 
-set(FILE_ICON logo-128.ico)
-set(FILE_ICON_PNG logo-128.png)
+set(APP_ICON_ICO logo-128.ico)
+set(APP_ICON_PNG logo-128.png)
 
 add_executable(sprite_tool_exe
-  # WIN32
+#   WIN32
   main.cpp
+  Frontend/WindowExt.cpp Frontend/Canvas.cpp Frontend/UINode.cpp 
+  App.cpp
 )
-  # WindowExt.cpp Canvas.cpp App.cpp UI.cpp)
+set_property(TARGET sprite_tool_exe PROPERTY CXX_STANDARD 23)
 
 add_definitions(
-  -DFILE_ICON="${FILE_ICON}"
-  -DFILE_ICON_PNG="${FILE_ICON_PNG}"
-  -DDEBUG_ENABLE)
+  -DAPP_ICON_ICO="${APP_ICON_ICO}"
+  -DAPP_ICON_PNG="${APP_ICON_PNG}"
+  -DDEBUG_ENABLE
+)
 
 if(MSVC)
   target_compile_options(sprite_tool_exe PRIVATE /W4 /WX)
@@ -19,32 +22,32 @@ else()
   target_compile_options(sprite_tool_exe PRIVATE -Wall -Wextra -Wpedantic -Werror)
 endif()
 
-target_sources(sprite_tool_exe PRIVATE ../assets/resource.rc)
+target_sources(sprite_tool_exe PRIVATE ../assets/resource.res)
 
-set_property(TARGET sprite_tool_exe PROPERTY CXX_STANDARD 23)
+target_link_libraries(sprite_tool_exe PRIVATE stb_image sfml-system sfml-window sfml-graphics)
+target_link_libraries(sprite_tool_exe PUBLIC ctre)
 
-target_link_libraries(sprite_tool_exe PRIVATE stb_image ImGui-SFML::ImGui-SFML)
 if(WIN32)
   if (BUILD_SHARED_LIBS)
     add_custom_command(TARGET sprite_tool_exe POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-          $<TARGET_FILE:ImGui-SFML::ImGui-SFML>
           $<TARGET_FILE:sfml-main>
           $<TARGET_FILE:sfml-system>
           $<TARGET_FILE:sfml-window>
           $<TARGET_FILE:sfml-graphics>
-          $<TARGET_FILE_DIR:sprite_tool_exe>)
+          $<TARGET_FILE_DIR:sprite_tool_exe>
+    )
   endif()
 endif()
 
 
 add_custom_command(
-    TARGET sprite_tool_exe POST_BUILD
+  TARGET sprite_tool_exe POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_SOURCE_DIR}/assets/${FILE_ICON}
-        $<TARGET_FILE_DIR:sprite_tool_exe>/${FILE_ICON}
+    ${CMAKE_SOURCE_DIR}/assets/${APP_ICON_ICO}
+    $<TARGET_FILE_DIR:sprite_tool_exe>/${APP_ICON_ICO}
 
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-        ${CMAKE_SOURCE_DIR}/assets/${FILE_ICON_PNG}
-        $<TARGET_FILE_DIR:sprite_tool_exe>/${FILE_ICON_PNG}
-        )
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    ${CMAKE_SOURCE_DIR}/assets/${APP_ICON_PNG}
+    $<TARGET_FILE_DIR:sprite_tool_exe>/${APP_ICON_PNG}
+)

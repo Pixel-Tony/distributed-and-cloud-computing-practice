@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 
 namespace WindowExt {
-    bool showFileDialog(sf::Window &, std::string &);
+    bool showFileDialog(sf::Window &handle, std::string &filenameDest);
 }
 
 #endif

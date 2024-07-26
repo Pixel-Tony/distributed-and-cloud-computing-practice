@@ -2,27 +2,18 @@
 #include "Image.hpp"
 
 #ifdef _WIN32
-    #define _WIN32_FILEDIALOG_IMPL
-    #include <codecvt>
     #include <Windows.h>
     #include <shobjidl.h>
-
-    #include <string.h>
-    #include <stringapiset.h>
 #endif
 
-
 namespace WindowExt {
-
-    inline bool sanitize(wchar_t *input, std::string &utf8dest) {
-        utf8dest.resize(wcslen(input)*2);
+    static inline bool sanitize(wchar_t *input, std::string &utf8dest) {
+        utf8dest.resize(wcslen(input) * 2);
         return stbi_convert_wchar_to_utf8((char *)utf8dest.data(), utf8dest.length(), input);
     }
 
-
-    bool showFileDialog(sf::Window &window, std::string &filePath) {
-
-#ifdef _WIN32_FILEDIALOG_IMPL
+    bool showFileDialog(sf::Window &window, std::string &filePathDest) {
+#ifdef _WIN32
         bool success{ false };
         HRESULT hr;
 
@@ -33,7 +24,7 @@ namespace WindowExt {
             // Create the FileOpenDialog object.
             hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void **>(&pFileOpen));
             if (SUCCEEDED(hr)) {
-                // Show the Open dialog box.
+                // Show the Open dialog box (as a child of current window).
                 hr = pFileOpen->Show(window.getSystemHandle());
 
                 // Get the file name from the dialog box.
@@ -48,7 +39,7 @@ namespace WindowExt {
                         hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
 
                         if (SUCCEEDED(hr)) {
-                            success = sanitize(pszFilePath, filePath);
+                            success = sanitize(pszFilePath, filePathDest);
                             CoTaskMemFree(pszFilePath);
                         }
                         pItem->Release();
@@ -60,12 +51,8 @@ namespace WindowExt {
         }
         return success;
 
-#endif /* _WIN32_FILEDIALOG_IMPL */
-
-
-#ifdef X11
-        return false;
-#endif /* X11 */
+#else
+    #error File dialog is not implemented for platforms other than Win32
+#endif /* _WIN32 */
     }
-
 }

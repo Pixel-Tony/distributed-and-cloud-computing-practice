@@ -1,37 +1,36 @@
-#ifndef _APP_H
-#define _APP_H
+#ifndef NST_APP_H
+#define NST_APP_H
 
 #include <vector>
+#include <string>
 
 #include "SFML/Main.hpp"
-#include "Canvas.hpp"
-#include "UI.hpp"
+#include "Frontend/Canvas.hpp"
+#include "Frontend/Base.hpp"
 
-#ifndef MIN_WIN_WIDTH
-#define MIN_WIN_WIDTH 0u
-#endif
-#ifndef MIN_WIN_HEIGHT
-#define MIN_WIN_HEIGHT 0u
-#endif
+namespace {
+	class App {
+		sf::RenderWindow m_window;
+		std::unique_ptr<Container *> m_uiRoot;
 
-class App {
-    sf::RenderWindow m_window;
-    std::vector<Canvas> m_canvases;
-    UI::Context ctx;
+		void handleResize(sf::Event &);
+	
+		void handleMousePressed(sf::Event &);
+	
+		void handleCloseEvent(sf::Event &);
+	
+		void initUI();
+	
+		void draw();
+	
+	public:
+		App(uint32_t width, uint32_t height, uint32_t frameRate, const std::string &title);
+	
+		void setupIcon(std::string &filePath);
+	
+		int runUntilExit();
+	};
 
-    void setupIcon(const char *filePath);
+}
 
-    void handleResize(sf::Event &);
-    void handleMousePressed(sf::Event &);
-    void handleCloseEvent(sf::Event &);
-
-    void initUI();
-
-    void draw();
-
-public:
-    App(const uint32_t width, const uint32_t height, const uint32_t frameRate, const std::string &title, const char *iconPath);
-    int runUntilExit();
-};
-
-#endif /* _APP_H */
+#endif /* NST_APP_H */

@@ -1,29 +1,27 @@
-#include <iostream>
 #include <filesystem>
-#include <vector>
-#include <string>
 
-#include "SFML/Graphics.hpp"
-
-#include "debug.hpp"
-
-#define MIN_WIN_WIDTH 200u
-#define MIN_WIN_HEIGHT 150u
+#define MIN_WIN_WIDTH 300u
+#define MIN_WIN_HEIGHT 200u
 #include "App.hpp"
 
-#include "UI.hpp"
 
-#if !(defined(FILE_ICON_PNG) && defined(FILE_ICON))
-#error "both FILE_ICON_PNG & FILE_ICON must be defined"
+#if !(defined(APP_ICON_PNG) && defined(APP_ICON_ICO))
+#error "both FILE_ICON_PNG and FILE_ICON must be defined"
 #endif
+
 
 #ifdef WIN32
-#define ENTRANCE_POINT_NAME WinMain
+#define APP_ENTRY() WinMain()
 #else
-#define ENTRANCE_POINT_NAME main
+#define APP_ENTRY() main()
 #endif
 
-int main() {
-    App app(1280u, 720u, 60u, "Hello there", FILE_ICON_PNG);
+
+int APP_ENTRY() {
+    App app(1280u, 720u, 60u, "Hello there");
+	app.setupIcon(APP_ICON_PNG);
+
     return app.runUntilExit();
 }
+
+#define DARK_BLUE "#040714"
