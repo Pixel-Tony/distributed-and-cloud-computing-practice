@@ -1,6 +1,16 @@
-set(SFML_BUILD_AUDIO FALSE)
-set(SFML_BUILD_NETWORK FALSE)
+set(SFML_BUILD_AUDIO OFF)
+set(SFML_BUILD_NETWORK OFF)
 
 add_subdirectory(sfml)
-add_subdirectory(stb-image)
-add_subdirectory(ctre)
+
+## set directory relative to this file
+set(IMGUI_DIR ../imgui)
+set(IMGUI_SFML_FIND_SFML OFF)
+set(IMGUI_SFML_ENABLE_WARNINGS ON)
+
+add_subdirectory(imgui-sfml)
+
+# implot comes without CMakeLists.txt
+add_library(implot STATIC implot/implot.cpp implot/implot_items.cpp)
+target_link_libraries(implot PRIVATE ImGui-SFML::ImGui-SFML)
+target_include_directories(implot PUBLIC implot PRIVATE imgui)

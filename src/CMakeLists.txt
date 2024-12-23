@@ -1,53 +1,42 @@
+find_package(OpenMP REQUIRED)
 
-set(APP_ICON_ICO logo-128.ico)
-set(APP_ICON_PNG logo-128.png)
+if (MSVC)
+  add_compile_options(/W4 /WX)
+else ()
+  add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+endif ()
 
-add_executable(sprite_tool_exe
-#   WIN32
-  main.cpp
-  Frontend/WindowExt.cpp Frontend/Canvas.cpp Frontend/UINode.cpp 
-  App.cpp
+# Add main executable
+add_executable(my-laba-collection 
+  main.cpp 
+  Stopwatch.cpp ColorPulse.cpp
+  IRenderable.cpp Task.cpp Lab.cpp Window.cpp 
+  integrate.cpp omp-utils.cpp
+  labs.cpp
+  lab-1/task.cpp
+  lab-2/task1.cpp lab-2/task2.cpp lab-2/task3.cpp
+  lab-3/task.cpp
+  lab-4/task.cpp
+  lab-5/task1.cpp lab-5/task2.cpp 
+  lab-6/task.cpp
 )
-set_property(TARGET sprite_tool_exe PROPERTY CXX_STANDARD 23)
+set_property(TARGET my-laba-collection PROPERTY CXX_STANDARD 23)
+target_include_directories(my-laba-collection PRIVATE include)
+target_compile_definitions(my-laba-collection PRIVATE -DDEBUG_ENABLE)
+target_link_libraries(my-laba-collection 
+  PRIVATE sfml-system sfml-window sfml-graphics ImGui-SFML::ImGui-SFML OpenMP::OpenMP_CXX implot)
 
-add_definitions(
-  -DAPP_ICON_ICO="${APP_ICON_ICO}"
-  -DAPP_ICON_PNG="${APP_ICON_PNG}"
-  -DDEBUG_ENABLE
-)
-
-if(MSVC)
-  target_compile_options(sprite_tool_exe PRIVATE /W4 /WX)
-else()
-  target_compile_options(sprite_tool_exe PRIVATE -Wall -Wextra -Wpedantic -Werror)
-endif()
-
-target_sources(sprite_tool_exe PRIVATE ../assets/resource.res)
-
-target_link_libraries(sprite_tool_exe PRIVATE stb_image sfml-system sfml-window sfml-graphics)
-target_link_libraries(sprite_tool_exe PUBLIC ctre)
-
-if(WIN32)
+# Copy shared libs to executable dir
+if (WIN32)
   if (BUILD_SHARED_LIBS)
-    add_custom_command(TARGET sprite_tool_exe POST_BUILD
+    add_custom_command(TARGET my-laba-collection POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
-          $<TARGET_FILE:sfml-main>
-          $<TARGET_FILE:sfml-system>
-          $<TARGET_FILE:sfml-window>
-          $<TARGET_FILE:sfml-graphics>
-          $<TARGET_FILE_DIR:sprite_tool_exe>
+      $<TARGET_FILE:sfml-main>
+      $<TARGET_FILE:sfml-system>
+      $<TARGET_FILE:sfml-window>
+      $<TARGET_FILE:sfml-graphics>
+      $<TARGET_FILE:ImGui-SFML>
+      $<TARGET_FILE_DIR:my-laba-collection>
     )
-  endif()
-endif()
-
-
-add_custom_command(
-  TARGET sprite_tool_exe POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_SOURCE_DIR}/assets/${APP_ICON_ICO}
-    $<TARGET_FILE_DIR:sprite_tool_exe>/${APP_ICON_ICO}
-
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    ${CMAKE_SOURCE_DIR}/assets/${APP_ICON_PNG}
-    $<TARGET_FILE_DIR:sprite_tool_exe>/${APP_ICON_PNG}
-)
+  endif ()
+endif ()

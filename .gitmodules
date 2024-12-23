@@ -1,6 +1,12 @@
 [submodule "dependencies/sfml"]
 	path = dependencies/sfml
 	url = https://github.com/SFML/SFML.git
-[submodule "ctre"]
-	path = dependencies/ctre
-	url = git@github.com:hanickadot/compile-time-regular-expressions.git
+[submodule "imgui-sfml"]
+	path = dependencies/imgui-sfml
+	url = git@github.com:SFML/imgui-sfml.git
+[submodule "imgui"]
+	path = dependencies/imgui
+	url = git@github.com:ocornut/imgui.git
+[submodule "implot"]
+	path = dependencies/implot
+	url = git@github.com:epezent/implot.git
