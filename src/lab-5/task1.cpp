@@ -19,7 +19,7 @@ void L5Task1::renderWindow() {
 
     setNextWindowPosSize(0, 0, 0.5, 1);
     if (beginWindow("Task 5.1: Calculating PI via integration")) {
-        ImGui::SliderInt("Steps count", &m_steps, 1, 1'000'000);
+        ImGui::SliderInt("Steps count", &m_steps, 1, 10'000'000);
         ImGui::SliderInt("Threads count", &m_threads, 1, omp_get_num_procs());
         ImGui::Spacing();
         if (ImGui::Button("Run")) {

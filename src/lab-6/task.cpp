@@ -45,8 +45,10 @@ void L6Task::putFire() {
     std::uniform_int_distribution<int> distribution(0, m_size * m_size - 1);
     auto index = distribution(gen);
     while (true) {
+        bool noneLeft = false;
         for (auto &cell: m_field) {
             if (cell == CellType::Bush || cell == CellType::Tree) {
+                noneLeft = true;
                 --index;
                 if (index == 0) {
                     cell = cell == CellType::Bush
@@ -56,6 +58,8 @@ void L6Task::putFire() {
                 }
             }
         }
+        if (!noneLeft) 
+            break;
     }
 }
 
@@ -83,7 +87,6 @@ void L6Task::step() {
             auto &newCell = newField[i * m_size + j];
             switch (*cell) {
                 case CellType::Bush:
-                    [[fallthrough]];
                 case CellType::Tree: {
                     auto xFirst = j == 0;
                     auto xLast = j == m_size - 1;
@@ -100,7 +103,6 @@ void L6Task::step() {
                     break;
 
                 case CellType::BushOnFire:
-                    [[fallthrough]];
                 case CellType::TreeOnFire2:
                     newCell = CellType::Dirt;
                     break;
@@ -186,9 +188,7 @@ const ImVec4 &L6Task::getColorForCell(L6Task::CellType cell) {
         case CellType::Tree:
             return arr[2];
         case CellType::BushOnFire:
-            [[fallthrough]];
         case CellType::TreeOnFire2:
-            [[fallthrough]];
         case CellType::TreeOnFire:
             return arr[3];
         case CellType::Dirt:
